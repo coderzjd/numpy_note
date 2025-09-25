@@ -1,2 +1,2 @@
 + https://anaconda.org/
-当我往gitee推送代码
++ [机器视觉视频](https://www.bilibili.com/video/BV1ghtRzZEHu)
