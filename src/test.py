@@ -1,23 +1,23 @@
 import cv2
-import os
+import file
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-img_path = os.path.join(BASE_DIR, 'info.png')
-# 1. 读图
-img = cv2.imread(img_path)
-if img is None:
-    raise FileNotFoundError('info.png 不在当前目录！')
-print('图像尺寸：', img.shape)  # (高, 宽, 通道数)
-h, w = img.shape[:2]
-h2, w2 = h , w // 2         # 1/4 尺寸
+# 加载 Haar 特征分类器
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# 2. 截取左上 1/4
-top_left = img[:h2, :w2].copy()      # .copy() 让子图连续内存，后面画框不影晌原图
-cv2.imshow('top-left 1/4', top_left)
+# 读取图像
+image = cv2.imread(file.get_path('pe0ple.png'))
 
-# 3. 把原图对应区域染成纯白
-img[:h2, :w2] = (255, 255, 255)      # BGR 顺序
-cv2.imshow('after fill white', img)
+# 转换为灰度图像
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+# 进行人脸检测
+faces = face_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+# 绘制检测结果
+for (x, y, w, h) in faces:
+    cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+# 显示结果
+cv2.imshow('Detected Faces', image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
